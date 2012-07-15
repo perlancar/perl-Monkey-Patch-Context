@@ -1,12 +1,12 @@
 package Monkey::Patch::Handle::Class;
-BEGIN {
-  $Monkey::Patch::Handle::Class::VERSION = '0.03';
-}
+
 use strict;
 use warnings;
 
 use base 'Monkey::Patch::Handle';
 use SUPER;
+
+# VERSION
 
 sub call_default {
     my $self  = shift;

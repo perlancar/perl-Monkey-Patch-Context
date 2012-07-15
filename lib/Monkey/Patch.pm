@@ -1,7 +1,4 @@
 package Monkey::Patch;
-BEGIN {
-  $Monkey::Patch::VERSION = '0.03';
-}
 
 use warnings;
 use strict;
@@ -13,6 +10,8 @@ use Monkey::Patch::Handle::Object;
 use Exporter qw(import);
 our @EXPORT_OK = qw(patch_package patch_class patch_object);
 our %EXPORT_TAGS = (all => \@EXPORT_OK);
+
+# VERSION
 
 sub patch_package {
     Monkey::Patch::Handle->new(
@@ -40,13 +39,8 @@ sub patch_object {
     )->install;
 }
 
-=head1 NAME
-
-Monkey::Patch - Scoped monkeypatching (you can at least play nice)
-
-=head1 VERSION
-
-version 0.03
+1;
+# ABSTRACT: Scoped monkeypatching (you can at least play nice)
 
 =head1 SYNOPSIS
 
@@ -60,7 +54,7 @@ version 0.03
         };
         Some::Class->something(); # says Whee! and does whatever
         undef $pkg;
-        Some::Class->something(); # no longer says Whee! 
+        Some::Class->something(); # no longer says Whee!
 
         my $obj = Some::Class->new;
         my $obj2 = Some::Class->new;
@@ -77,7 +71,7 @@ version 0.03
         $obj->twiddle()   # still does
         undef $whoah;
         $obj->twiddle();  # but not any more
-    
+
 =head1 SUBROUTINES
 
 The following subroutines are available (either individually or via :all)

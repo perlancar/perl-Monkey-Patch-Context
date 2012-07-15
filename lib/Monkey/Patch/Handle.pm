@@ -1,12 +1,12 @@
 package Monkey::Patch::Handle;
-BEGIN {
-  $Monkey::Patch::Handle::VERSION = '0.03';
-}
+
 use Scalar::Util qw(weaken);
 use Sub::Delete;
 
 use strict;
 use warnings;
+
+# VERSION
 
 my %handles;
 

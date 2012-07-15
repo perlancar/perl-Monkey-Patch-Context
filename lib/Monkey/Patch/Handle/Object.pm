@@ -1,11 +1,10 @@
 package Monkey::Patch::Handle::Object;
-BEGIN {
-  $Monkey::Patch::Handle::Object::VERSION = '0.03';
-}
 use strict;
 use warnings;
 
 use base 'Monkey::Patch::Handle::Class';
+
+# VERSION
 
 sub should_call_code {
     my ($self, $invocant) = @_;
