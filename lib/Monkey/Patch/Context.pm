@@ -78,7 +78,9 @@ This module is a fork of L<Monkey::Patch> 0.03. Its only notable difference, at
 the moment, is that the patcher subroutine gets, as the first argument, a
 context hash instead of the original subroutine. The context hash contains,
 among others, the original subroutine in C<orig_sub> key. There are other
-information contained in other keys.
+information contained in other keys, like C<orig_name> and possible others in
+the future. This gives more, well, context to the patcher subroutine, useful
+e.g. when the same patcher subroutine patches multiple subroutines.
 
 =head1 SUBROUTINES
 
