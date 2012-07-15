@@ -6,17 +6,17 @@
 }
 
 use Test::More;
-use Monkey::Patch qw(:all);
+use Monkey::Patch::Context qw(:all);
 
 my $one = patch_package Foo => bar => sub {
-    my $prev = shift->();
+    my $prev = shift->{orig_sub}->();
     "package $prev";
 };
 
 is(Foo::bar(), 'package unpatched');
 
 my $two = patch_class Foo => bar => sub {
-    my $prev = shift->();
+    my $prev = shift->{orig_sub}->();
     "class $prev";
 };
 
@@ -24,7 +24,7 @@ is(Foo->bar, 'class package unpatched');
 
 my $o = bless {}, 'Foo';
 my $three = patch_object $o, bar => sub {
-    my $prev = shift->();
+    my $prev = shift->{orig_sub}->();
     "obj $prev";
 };
 

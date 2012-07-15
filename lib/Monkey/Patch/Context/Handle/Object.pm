@@ -1,8 +1,8 @@
-package Monkey::Patch::Handle::Object;
+package Monkey::Patch::Context::Handle::Object;
 use strict;
 use warnings;
 
-use base 'Monkey::Patch::Handle::Class';
+use base 'Monkey::Patch::Context::Handle::Class';
 
 # VERSION
 

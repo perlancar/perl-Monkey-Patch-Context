@@ -1,9 +1,9 @@
-package Monkey::Patch::Handle::Class;
+package Monkey::Patch::Context::Handle::Class;
 
 use strict;
 use warnings;
 
-use base 'Monkey::Patch::Handle';
+use base 'Monkey::Patch::Context::Handle';
 use SUPER;
 
 # VERSION

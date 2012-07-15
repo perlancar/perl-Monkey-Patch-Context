@@ -1,4 +1,4 @@
-package Monkey::Patch::Handle;
+package Monkey::Patch::Context::Handle;
 
 use Scalar::Util qw(weaken);
 use Sub::Delete;
@@ -55,7 +55,11 @@ sub wrapper {
         weaken($self);
         $self->{wrapper} = sub {
             if ($self->should_call_code($_[0])) {
-                unshift @_, sub { $self->call_previous(@_) };
+                my $ctx = {
+                    orig_sub  => sub { $self->call_previous(@_) },
+                    orig_name => $self->name,
+                };
+                unshift @_, $ctx;
                 goto $self->{code};
             }
             else {

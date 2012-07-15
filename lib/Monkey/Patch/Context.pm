@@ -1,11 +1,11 @@
-package Monkey::Patch;
+package Monkey::Patch::Context;
 
 use warnings;
 use strict;
 
-use Monkey::Patch::Handle;
-use Monkey::Patch::Handle::Class;
-use Monkey::Patch::Handle::Object;
+use Monkey::Patch::Context::Handle;
+use Monkey::Patch::Context::Handle::Class;
+use Monkey::Patch::Context::Handle::Object;
 
 use Exporter qw(import);
 our @EXPORT_OK = qw(patch_package patch_class patch_object);
@@ -14,7 +14,7 @@ our %EXPORT_TAGS = (all => \@EXPORT_OK);
 # VERSION
 
 sub patch_package {
-    Monkey::Patch::Handle->new(
+    Monkey::Patch::Context::Handle->new(
         package => shift,
         subname => shift,
         code    => shift,
@@ -22,7 +22,7 @@ sub patch_package {
 }
 
 sub patch_class {
-    Monkey::Patch::Handle::Class->new(
+    Monkey::Patch::Context::Handle::Class->new(
         package => shift,
         subname => shift,
         code    => shift,
@@ -31,7 +31,7 @@ sub patch_class {
 
 sub patch_object {
     my $obj = shift;
-    Monkey::Patch::Handle::Object->new(
+    Monkey::Patch::Context::Handle::Object->new(
         object  => $obj,
         package => ref $obj,
         subname => shift,
@@ -44,13 +44,13 @@ sub patch_object {
 
 =head1 SYNOPSIS
 
-    use Monkey::Patch qw(:all);
+    use Monkey::Patch::Context qw(:all);
 
     sub some_subroutine {
         my $pkg = patch_class 'Some::Class' => 'something' => sub {
-            my $original = shift;
+            my $ctx = shift;
             say "Whee!";
-            $original->(@_);
+            $ctx->{orig_sub}->(@_);
         };
         Some::Class->something(); # says Whee! and does whatever
         undef $pkg;
@@ -60,10 +60,10 @@ sub patch_object {
         my $obj2 = Some::Class->new;
 
         my $whoah = patch_object $obj, 'twiddle' => sub {
-            my $original = shift;
-            my $self     = shift;
+            my $ctx  = shift;
+            my $self = shift;
             say "Whoah!";
-            $self->$original(@_);
+            $ctx->{orig_sub}->($self, @_);
         };
 
         $obj->twiddle();  # says Whoah!
@@ -72,17 +72,26 @@ sub patch_object {
         undef $whoah;
         $obj->twiddle();  # but not any more
 
+=head1 DESCRIPTION
+
+This module is a fork of L<Monkey::Patch> 0.03. Its only notable difference, at
+the moment, is that the patcher subroutine gets, as the first argument, a
+context hash instead of the original subroutine. The context hash contains,
+among others, the original subroutine in C<orig_sub> key. There are other
+information contained in other keys.
+
 =head1 SUBROUTINES
 
 The following subroutines are available (either individually or via :all)
 
 =head2 patch_package (package, subname, code)
 
-Wraps C<package>'s subroutine named <subname> with your <code>.  Your code
-recieves the original subroutine as its first argument, followed by any
-arguments the subroutine would have normally gotten.  You can always call the
-subroutine ref your received; if there was no subroutine by that name, the
-coderef will simply do nothing.
+Wraps C<package>'s subroutine named <subname> with your <code>. Your code
+recieves a context hash (containing these keys: C<orig_sub> which is the
+original subroutine, C<orig_name> which is the original subroutine's name) as
+its first argument, followed by any arguments the subroutine would have normally
+gotten. You can always call the subroutine ref your received; if there was no
+subroutine by that name, the coderef will simply do nothing.
 
 =head2 patch_class (class, methodname, code)
 
@@ -111,3 +120,8 @@ original subroutine, of course).
 This magic is only faintly black, but mucking around with the symbol table is
 not for the faint of heart.  Help make this module better by reporting any
 strange behavior that you see!
+
+=head1 ORIGINAL AUTHOR
+
+Paul Driver <frodwith@cpan.org>
+

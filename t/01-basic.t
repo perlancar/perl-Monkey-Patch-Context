@@ -14,22 +14,22 @@
 
 
 use Test::More;
-use Monkey::Patch qw(:all);
+use Monkey::Patch::Context qw(:all);
 
 my $patcher = sub {
-    my $o = shift;
-   'patched ' . $o->(@_) 
+    my $ctx = shift;
+   'patched ' . $ctx->{orig_name} . ' '. $ctx->{orig_sub}->(@_)
 };
 
 {
     my $h = patch_package Foo => bar => $patcher;
-    is Foo::bar('one'), 'patched one';
+    is Foo::bar('one'), 'patched Foo::bar one';
 }
 is Foo::bar('one'), 'one';
 
 {
     my $h = patch_class Bar => bar => $patcher;
-    is(Bar->bar('one'), 'patched one');
+    is(Bar->bar('one'), 'patched Bar::bar one');
 }
 is(Bar->bar('one'), 'one');
 
@@ -38,7 +38,7 @@ my $two = Bar->new;
 
 {
     my $h = patch_object $one => bar => $patcher;
-    is $one->bar('one'), 'patched one';
+    is $one->bar('one'), 'patched Bar::bar one';
     is $two->bar('one'), 'one';
 }
 

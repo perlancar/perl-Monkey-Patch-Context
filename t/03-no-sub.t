@@ -1,9 +1,9 @@
 {
-    package Foo; 
+    package Foo;
 }
 
 use Test::More;
-use Monkey::Patch qw(patch_object);
+use Monkey::Patch::Context qw(patch_object);
 
 my $o = bless {}, 'Foo';
 my $h = patch_object $o => 'bar', sub {
